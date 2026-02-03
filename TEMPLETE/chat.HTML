@@ -3,21 +3,161 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🤖 SDK Chat Agent</title>
+  <title>✈️ Airline Customer Service</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <h1 class="heading">Ready when you are.</h1>
-    <div class="chat-bar">
-      <input type="text" id="userInput" placeholder="Ask anything..." />
+  <!-- Login Screen -->
+  <div id="loginScreen" class="login-container">
+    <div class="login-box">
+      <div class="logo-large">✈️ SkyLine Airways</div>
+      <h2>Customer Login</h2>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" required placeholder="your.email@example.com">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required placeholder="Enter your password">
+        </div>
+        <button type="submit" class="login-btn">Login</button>
+        <div id="loginError" class="error-message"></div>
+      </form>
+      <div class="demo-credentials">
+        <p><strong>Demo Credentials:</strong></p>
+        <p>Email: aadhvik@email.com</p>
+        <p>Password: password123</p>
+      </div>
     </div>
-    <div class="chat-box" id="chatBox"></div>
   </div>
 
+  <!-- Chat Screen -->
+  <div id="chatScreen" class="chat-screen" style="display: none;">
+    <div class="header">
+      <div class="logo">✈️ SkyLine Airways</div>
+      <div class="tagline">Customer Service Assistant</div>
+      <div class="user-info">
+        <span id="userName"></span>
+        <button id="logoutBtn" class="logout-btn">Logout</button>
+      </div>
+    </div>
+    <div class="container">
+      <div class="welcome-section">
+        <h1 class="heading">How can we assist you today?</h1>
+        <p class="subheading">Book flights, check status, manage bookings, and get instant support</p>
+        <button id="newChatBtn" class="new-chat-btn">🔄 New Conversation</button>
+      </div>
+      <div class="chat-box" id="chatBox"></div>
+      <div class="chat-bar">
+        <input type="text" id="userInput" placeholder="Type your message here..." />
+        <button id="sendBtn" class="send-btn">Send ➤</button>
+      </div>
+    </div>
+  </div>
+  
   <script>
+    const loginScreen = document.getElementById("loginScreen");
+    const chatScreen = document.getElementById("chatScreen");
+    const loginForm = document.getElementById("loginForm");
+    const loginError = document.getElementById("loginError");
     const chatBox = document.getElementById("chatBox");
     const userInput = document.getElementById("userInput");
+    const newChatBtn = document.getElementById("newChatBtn");
+    const sendBtn = document.getElementById("sendBtn");
+    const userName = document.getElementById("userName");
+    const logoutBtn = document.getElementById("logoutBtn");
+    
+    let sessionId = null;
+    let authToken = null;
+    let currentUser = null;
+
+    // Check if already logged in
+    (function checkAuth() {
+      try {
+        const stored = localStorage.getItem("auth_token");
+        const user = localStorage.getItem("user_data");
+        if (stored && user) {
+          authToken = stored;
+          currentUser = JSON.parse(user);
+          showChatScreen();
+        }
+      } catch {}
+    })();
+
+    // Login handler
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      loginError.textContent = "";
+      
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          loginError.textContent = error.detail || "Login failed";
+          return;
+        }
+
+        const data = await response.json();
+        authToken = data.token;
+        currentUser = {
+          customer_id: data.customer_id,
+          name: data.name,
+          email: data.email
+        };
+
+        // Store credentials
+        try {
+          localStorage.setItem("auth_token", authToken);
+          localStorage.setItem("user_data", JSON.stringify(currentUser));
+        } catch {}
+
+        showChatScreen();
+      } catch (err) {
+        loginError.textContent = "⚠️ Could not connect to server";
+      }
+    });
+
+    // Logout handler
+    logoutBtn.addEventListener("click", () => {
+      try {
+        localStorage.removeItem("auth_token");
+        localStorage.removeItem("user_data");
+        localStorage.removeItem("chat_session_id");
+      } catch {}
+      authToken = null;
+      currentUser = null;
+      sessionId = null;
+      chatBox.innerHTML = "";
+      loginScreen.style.display = "flex";
+      chatScreen.style.display = "none";
+      loginForm.reset();
+    });
+
+    function showChatScreen() {
+      loginScreen.style.display = "none";
+      chatScreen.style.display = "block";
+      userName.textContent = `👤 ${currentUser.name}`;
+      
+      // Restore session
+      try {
+        const saved = localStorage.getItem("chat_session_id");
+        if (saved) sessionId = saved;
+      } catch {}
+      
+      // Welcome message
+      if (chatBox.children.length === 0) {
+        addMessage(`Welcome back, ${currentUser.name}! How can I assist you today?`, "bot");
+      }
+    }
 
     function addMessage(text, sender) {
       const msg = document.createElement("div");
@@ -38,9 +178,20 @@
         const response = await fetch("http://127.0.0.1:8000/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message })
+          body: JSON.stringify({ 
+            message, 
+            session_id: sessionId,
+            token: authToken 
+          })
         });
         const data = await response.json();
+        
+        // Capture session id
+        if (data.session_id && !sessionId) {
+          sessionId = data.session_id;
+          try { localStorage.setItem("chat_session_id", sessionId); } catch {}
+        }
+        
         addMessage(data.response, "bot");
       } catch (err) {
         addMessage("⚠️ Error: Could not connect to backend.", "bot");
@@ -50,6 +201,16 @@
     // Enter key to send
     userInput.addEventListener("keypress", function(e) {
       if (e.key === "Enter") sendMessage();
+    });
+    
+    sendBtn.addEventListener("click", sendMessage);
+
+    // New chat
+    newChatBtn.addEventListener('click', () => {
+      try { localStorage.removeItem('chat_session_id'); } catch {}
+      sessionId = null;
+      chatBox.innerHTML = '';
+      addMessage(`🆕 Started a new chat. How can I help you, ${currentUser.name}?`, 'bot');
     });
   </script>
 </body>

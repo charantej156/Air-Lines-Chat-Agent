@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Book flights with SkyLine Airways - Best prices, 24/7 support, and seamless booking experience">
+  <title>SkyLine Airways - Book Your Flight Today</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar-content">
+      <a href="#" class="navbar-logo">
+        <span>✈️</span>
+        <span>SkyLine Airways</span>
+      </a>
+      <ul class="navbar-menu">
+        <li><a href="#home" class="navbar-link active">Home</a></li>
+        <li><a href="#" class="navbar-link" data-page="search">Flights</a></li>
+        <li><a href="#" class="navbar-link" data-page="dashboard">My Bookings</a></li>
+        <li><a href="#" class="navbar-link" id="authLink">Login</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content Container -->
+  <div id="app">
+    <!-- Hero Section with Search -->
+    <section class="hero" id="home">
+      <div class="hero-content">
+        <h1 class="hero-title">Your Journey Begins Here</h1>
+        <p class="hero-subtitle">Discover the world with SkyLine Airways - Premium flights at unbeatable prices</p>
+
+        <!-- Flight Search Widget -->
+        <div class="search-widget">
+          <form class="search-form" id="searchForm">
+            <div class="form-group">
+              <label class="form-label">From</label>
+              <input type="text" class="form-input" id="searchOrigin" placeholder="Delhi, Mumbai..." required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">To</label>
+              <input type="text" class="form-input" id="searchDestination" placeholder="Dubai, Singapore..." required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date</label>
+              <input type="date" class="form-input" id="searchDate" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Passengers</label>
+              <select class="form-select" id="searchPassengers">
+                <option value="1">1 Passenger</option>
+                <option value="2">2 Passengers</option>
+                <option value="3">3 Passengers</option>
+                <option value="4">4 Passengers</option>
+                <option value="5">5+ Passengers</option>
+              </select>
+            </div>
+          </form>
+          <button type="submit" form="searchForm" class="btn btn-primary btn-lg" style="width: 100%;">
+            🔍 Search Flights
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section" style="background: white;">
+      <div class="container">
+        <h2 class="text-center mb-xl">Why Choose SkyLine Airways?</h2>
+        <div class="grid grid-3">
+          <div class="card text-center">
+            <div style="font-size: 3rem; margin-bottom: var(--spacing-md);">💰</div>
+            <h3>Best Prices</h3>
+            <p>Competitive fares and exclusive deals on domestic and international flights</p>
+          </div>
+          <div class="card text-center">
+            <div style="font-size: 3rem; margin-bottom: var(--spacing-md);">🛡️</div>
+            <h3>Secure Booking</h3>
+            <p>Safe and encrypted payment processing with multiple payment options</p>
+          </div>
+          <div class="card text-center">
+            <div style="font-size: 3rem; margin-bottom: var(--spacing-md);">⚡</div>
+            <h3>Instant Confirmation</h3>
+            <p>Get your booking confirmation and e-tickets instantly via email</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Popular Destinations -->
+    <section class="section" style="background: var(--gray-50);">
+      <div class="container">
+        <h2 class="text-center mb-xl">Popular Destinations</h2>
+        <div class="grid grid-4">
+          <div class="card" style="padding: 0; overflow: hidden; cursor: pointer;">
+            <div
+              style="height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+              🏙️
+            </div>
+            <div style="padding: var(--spacing-lg);">
+              <h4>Dubai</h4>
+              <p style="margin: 0; font-size: 0.875rem;">From ₹15,000</p>
+            </div>
+          </div>
+          <div class="card" style="padding: 0; overflow: hidden; cursor: pointer;">
+            <div
+              style="height: 200px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+              🌆
+            </div>
+            <div style="padding: var(--spacing-lg);">
+              <h4>Singapore</h4>
+              <p style="margin: 0; font-size: 0.875rem;">From ₹18,500</p>
+            </div>
+          </div>
+          <div class="card" style="padding: 0; overflow: hidden; cursor: pointer;">
+            <div
+              style="height: 200px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+              🏛️
+            </div>
+            <div style="padding: var(--spacing-lg);">
+              <h4>London</h4>
+              <p style="margin: 0; font-size: 0.875rem;">From ₹45,000</p>
+            </div>
+          </div>
+          <div class="card" style="padding: 0; overflow: hidden; cursor: pointer;">
+            <div
+              style="height: 200px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+              🗽
+            </div>
+            <div style="padding: var(--spacing-lg);">
+              <h4>New York</h4>
+              <p style="margin: 0; font-size: 0.875rem;">From ₹55,000</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="background: var(--gray-900); color: white; padding: var(--spacing-2xl) 0;">
+      <div class="container text-center">
+        <div class="navbar-logo"
+          style="justify-content: center; margin-bottom: var(--spacing-lg); -webkit-text-fill-color: white;">
+          <span>✈️</span>
+          <span style="background: white; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">SkyLine
+            Airways</span>
+        </div>
+        <p style="color: var(--gray-400);">© 2025 SkyLine Airways. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Chat Agent Button -->
+  <button class="chat-widget-button" id="chatAgentButton" title="Chat with our AI Assistant" onclick="openChatAgent()">
+    💬
+  </button>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
